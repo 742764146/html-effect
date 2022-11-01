@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>飘雪</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        width: 100%;
+        height: 100vh;
+        background-image: url('./bg.jpeg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+  </body>
+  <script>
+    /**
+     * @type {HTMLCanvasElement}
+     */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    canvas.height = h;
+    canvas.width = w;
+
+    let num = 200; //雪花数量
+    let snows = []; // 雪花位置半径
+    for (let i = 0; i < num; i++) {
+      snows.push({
+        x: Math.random() * w, //x轴
+        y: Math.random() * h, //y轴
+        r: Math.random() * 10 // 雪花半径
+      });
+    }
+    let move = () => {
+      for (let i = 0; i < num; i++) {
+        let snow = snows[i];
+        snow.x += Math.random() * 2 + 1;
+        snow.y += Math.random() * 2 + 1;
+        if (snow.x > w) {
+          snow.x = 0;
+        }
+        if (snow.y > h) {
+          snow.y = 0;
+        }
+      }
+    };
+    let draw = () => {
+      //擦除画布
+      ctx.clearRect(0, 0, w, h);
+      ctx.beginPath();
+      ctx.fillStyle = 'rgb(255,255,255)'; //颜色
+      ctx.shadowColor = 'rgb(255,255,255)'; //阴影
+      ctx.shadowBlur = 10; // 模糊
+
+      for (let i = 0; i < num; i++) {
+        let snow = snows[i];
+        ctx.moveTo(snow.x, snow.y);
+        ctx.arc(snow.x, snow.y, snow.r, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      ctx.closePath();
+      move();
+    };
+    draw();
+    setInterval(draw, 30);
+  </script>
+</html>
